@@ -1,4 +1,4 @@
 RPiCandyTrain
 =============
 
-An automotive raspberry pi candy train
+An automotive raspberry pi candy train.
