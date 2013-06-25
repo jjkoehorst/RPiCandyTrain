@@ -41,8 +41,6 @@ p_left = io.PWM(pwmleft_pin, 50)
 p_right.start(11)
 p_left.start(11)
 
-# set the angle to zero in the beginning
-angle = 0
 
 # methods for turning the motors forwards and backwards for both motors seperately
 def forwards_right():
@@ -68,7 +66,8 @@ def stop():
 	io.output(in4_pin, False)
 
 def move_on_keys(stdscr):
-	key='s'
+	# set the angle to zero in the beginning
+	angle = 0
 	# main loop, waiting for input and calling the methods above to steer
 	while True:
 		# Wait for input
