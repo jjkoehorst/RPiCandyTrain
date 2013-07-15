@@ -102,6 +102,7 @@ def move_on_keys(stdscr):
 			if key == 'u':
 				speed_right += 10
 				speed_left += 10
+				stdscr.addstr(str(speed_left))
 			else:
 				key='u'
 				# print out what it's doing (just to control if it's working)
