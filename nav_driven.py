@@ -134,8 +134,8 @@ def move_on_keys(stdscr):
 				stop()
 
 		# set speed
-		p_right.ChangeDutyCycle(speed_right) 
-		p_left.ChangeDutyCycle(speed_left)
+		p_right.ChangeDutyCycle(min(speed_right,100)) 
+		p_left.ChangeDutyCycle(min(speed_left,100))
 
 # This initialises curses and starts the method above. The wrapper() function takes care about handling exceptions and quitting 
 # curses properly
