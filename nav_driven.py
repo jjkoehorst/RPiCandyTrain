@@ -15,11 +15,11 @@ io.setmode(io.BCM)
 
 # name the pins used
 # right motor
-in1_pin = 4
-in2_pin = 17
+in1_pin = 17 #bottom
+in2_pin = 4 #top
 # left motor
-in3_pin = 23
-in4_pin = 24
+in3_pin = 23 #bottom
+in4_pin = 24 #top
 # right
 pwm_right_pin = 27 # this number depends on your version of the Pi. If it's Model A it should be 21
 # left
@@ -83,7 +83,7 @@ def move_on_keys(stdscr):
 				stdscr.addstr('left')
 				forwards_right()
 				backwards_left()
-				speed_right = 100
+				speed_right = 50
 				speed_left = 50
 		elif cmd == curses.KEY_RIGHT:
 			# the if makes the programm only respond to the first time the key is pressed. It doesn't change until another key is pressed.
@@ -94,9 +94,9 @@ def move_on_keys(stdscr):
 				# print out what it's doing (just to control if it's working)
 				stdscr.addstr('right')
 				forwards_left()
-				forwards_right()
+				backwards_right()
 				speed_right = 50
-				speed_left = 100
+				speed_left = 50
 		elif cmd == curses.KEY_UP:
 			# If it's already going forward, it just accelerates
 			if key == 'u':
