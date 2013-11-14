@@ -15,29 +15,29 @@ io.setmode(io.BCM)
 
 # name the pins used
 # right motor
-in1_pin = 4
-in2_pin = 17
+in1_pin = 17 #bottom
+in2_pin = 4 #top
 # left motor
-in3_pin = 23
-in4_pin = 24
+in3_pin = 23 #bottom
+in4_pin = 24 #top
 # right
-pwm1_pin = 27 # this number depends on your version of the Pi. If it's Model A it should be 21
+pwm_right_pin = 27 # this number depends on your version of the Pi. If it's Model A it should be 21
 # left
-pwm2_pin = 18
+pwm_left_pin = 18
 
 # set the pins as output pins
 io.setup(in1_pin, io.OUT)
 io.setup(in2_pin, io.OUT)
 io.setup(in3_pin, io.OUT)
 io.setup(in4_pin, io.OUT)
-io.setup(pwm1_pin, io.OUT)
-io.setup(pwm2_pin, io.OUT)
+io.setup(pwm_right_pin, io.OUT)
+io.setup(pwm_left_pin, io.OUT)
 
 # set and start the PWM pins
-p1 = io.PWM(pwm1_pin, 0.5)
-p2 = io.PWM(pwm2_pin, 0.5)
-p1.start(11)
-p2.start(11)
+p_right = io.PWM(pwm_right_pin, 50)
+p_left = io.PWM(pwm_left_pin, 50)
+p_right.start(11)
+p_left.start(11)
 
 # methods for turning the motors forwards and backwards for both motors seperately
 def forwards_right():
@@ -64,6 +64,8 @@ def stop():
 
 def move_on_keys(stdscr):
 	key='s'
+	speed_right = 50
+	speed_left = 50
 	# main loop, waiting for input and calling the methods above to steer
 	while True:
 		# Wait for input
@@ -81,6 +83,8 @@ def move_on_keys(stdscr):
 				stdscr.addstr('left')
 				forwards_right()
 				backwards_left()
+				speed_right = 50
+				speed_left = 50
 		elif cmd == curses.KEY_RIGHT:
 			# the if makes the programm only respond to the first time the key is pressed. It doesn't change until another key is pressed.
 			if key == 'r':
@@ -91,16 +95,22 @@ def move_on_keys(stdscr):
 				stdscr.addstr('right')
 				forwards_left()
 				backwards_right()
+				speed_right = 50
+				speed_left = 50
 		elif cmd == curses.KEY_UP:
-			# the if makes the programm only respond to the first time the key is pressed. It doesn't change until another key is pressed.
+			# If it's already going forward, it just accelerates
 			if key == 'u':
-				continue
+				speed_right += 10
+				speed_left += 10
+				stdscr.addstr(str(speed_left))
 			else:
 				key='u'
 				# print out what it's doing (just to control if it's working)
 				stdscr.addstr('up')
 				forwards_left()
 				forwards_right()
+				speed_right = 50
+				speed_left = 50
 		elif cmd == curses.KEY_DOWN:
 			# the if makes the programm only respond to the first time the key is pressed. It doesn't change until another key is pressed.
 			if key == 'd':
@@ -111,6 +121,8 @@ def move_on_keys(stdscr):
 				stdscr.addstr('down')
 				backwards_left()
 				backwards_right()
+				speed_right = 50
+				speed_left = 50
 		elif cmd == ord(' '):
 			# the if makes the programm only respond to the first time the key is pressed. It doesn't change until another key is pressed.
 			if key == 's':
@@ -121,11 +133,9 @@ def move_on_keys(stdscr):
 				stdscr.addstr('stop')
 				stop()
 
-		# set speed to maximum (for now, can be changed later)
-		speed1 = 100
-		speed2 = 100
-		p1.ChangeDutyCycle(speed1) 
-		p2.ChangeDutyCycle(speed2)
+		# set speed
+		p_right.ChangeDutyCycle(min(speed_right,100)) 
+		p_left.ChangeDutyCycle(min(speed_left,100))
 
 # This initialises curses and starts the method above. The wrapper() function takes care about handling exceptions and quitting 
 # curses properly
@@ -134,8 +144,8 @@ curses.wrapper(move_on_keys)
 print "Engines stopped"
 
 # stop the PWM
-p1.stop()
-p2.stop()
+p_right.stop()
+p_left.stop()
 
 # clean up the GPIO
 io.cleanup()
